@@ -1,0 +1,44 @@
+name: Security Audit
+
+# Voert npm audit uit bij elke push naar main, op elke pull request,
+# en daily om 06:00 UTC. Faalt bij high/critical vulnerabilities.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: npm audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --omit=optional
+
+      - name: Audit (production-only, fail on high+)
+        run: npm audit --audit-level=high --omit=dev
+
+      - name: Audit (full report — informational)
+        if: always()
+        run: npm audit --json > /tmp/audit.json || true
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-report
+          path: /tmp/audit.json
+          retention-days: 30

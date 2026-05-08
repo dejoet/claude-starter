@@ -1,0 +1,17 @@
+{
+  "name": "claude-starter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Claude Code project boilerplate — CLAUDE.md, hooks, ESLint, audit-pipeline.",
+  "scripts": {
+    "audit": "npm audit --omit=dev",
+    "audit:full": "npm audit",
+    "audit:fix": "npm audit fix",
+    "audit:ci": "npm audit --audit-level=high --omit=dev",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write .",
+    "test": "echo \"TODO: vervang door echte test-runner (jest, vitest, ...)\" && exit 0"
+  },
+  "devDependencies": {}
+}
